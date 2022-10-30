@@ -11,6 +11,37 @@ class Router {
         DELETE: {},
         USE: { '*': [] },
     };
+    #routers = [];
+    __active__() {
+        const METHODS = this.#METHODS;
+        this.#routers.forEach(([path, router]) => {
+            const methods = router.__active__();
+            Object.keys(methods).forEach(m => {
+                let method = m;
+                if (path === '*')
+                    if (method === 'USE')
+                        METHODS.USE['*'] = [...METHODS.USE['*'], ...methods[method]['*']];
+                    else {
+                        METHODS[method] = {
+                            ...METHODS[method],
+                            ...methods[method],
+                        };
+                    }
+                else {
+                    Object.keys(methods[method]).forEach(p => {
+                        if (!methods[method][p][0])
+                            return;
+                        if (p === '*')
+                            METHODS[method][path] = methods[method]['*'];
+                        else
+                            METHODS[method][betterURL_1.default.clearPath(path + p)] = methods[method][p];
+                    });
+                }
+            });
+        });
+        this.#METHODS = METHODS;
+        return this.#METHODS;
+    }
     get METHODS() {
         return this.#METHODS;
     }
@@ -35,40 +66,16 @@ class Router {
             this.#METHODS.USE['*'].push(path);
         }
         else if (typeof path === 'object') {
-            this.#METHODS.GET = { ...this.#METHODS.GET, ...path.METHODS.GET };
-            this.#METHODS.PUT = { ...this.#METHODS.PUT, ...path.METHODS.PUT };
-            this.#METHODS.POST = { ...this.#METHODS.POST, ...path.METHODS.POST };
-            this.#METHODS.DELETE = { ...this.#METHODS.DELETE, ...path.METHODS.DELETE };
-            this.#METHODS.USE['*'] = [...this.#METHODS.USE['*'], ...path.METHODS.USE['*']];
+            this.#routers.push(['*', path]);
         }
         else if (typeof path === 'string') {
-            callback.forEach((cb) => {
+            callback.forEach(cb => {
                 if (typeof cb === 'function') {
                     this.#METHODS.USE[betterURL_1.default.clearPath(path)] ||= [];
                     this.#METHODS.USE[betterURL_1.default.clearPath(path)].push(cb);
                 }
                 if (typeof cb === 'object') {
-                    const PATH = betterURL_1.default.clearPath(path);
-                    this.#METHODS.GET[PATH] ||= [];
-                    this.#METHODS.PUT[PATH] ||= [];
-                    this.#METHODS.USE[PATH] ||= [];
-                    this.#METHODS.POST[PATH] ||= [];
-                    this.#METHODS.DELETE[PATH] ||= [];
-                    Object.keys(cb.METHODS.GET).filter(k => k !== '*').map(key => [PATH + key, key]).forEach(([path, key]) => {
-                        this.#METHODS.GET[path] = cb.METHODS.GET[key];
-                    });
-                    Object.keys(cb.METHODS.PUT).filter(k => k !== '*').map(key => [PATH + key, key]).forEach(([path, key]) => {
-                        this.#METHODS.PUT[path] = cb.METHODS.PUT[key];
-                    });
-                    Object.keys(cb.METHODS.POST).filter(k => k !== '*').map(key => [PATH + key, key]).forEach(([path, key]) => {
-                        this.#METHODS.POST[path] = cb.METHODS.POST[key];
-                    });
-                    Object.keys(cb.METHODS.DELETE).filter(k => k !== '*').map(key => [PATH + key, key]).forEach(([path, key]) => {
-                        this.#METHODS.DELETE[path] = cb.METHODS.DELETE[key];
-                    });
-                    Object.keys(cb.METHODS.USE).filter(k => k !== '*').map(key => [PATH + key, key]).forEach(([path, key]) => {
-                        this.#METHODS.USE[path] = cb.METHODS.USE[key];
-                    });
+                    this.#routers.push([betterURL_1.default.clearPath(path), cb]);
                 }
             });
         }

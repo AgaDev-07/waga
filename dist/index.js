@@ -9,6 +9,8 @@ const bodyParser_1 = __importDefault(require("./lib/bodyParser"));
 const betterURL_1 = __importDefault(require("./lib/betterURL"));
 const cors_1 = __importDefault(require("./lib/cors"));
 const router_1 = __importDefault(require("./lib/router"));
+const statuses_1 = __importDefault(require("./lib/statuses"));
+const escapeHTML_1 = __importDefault(require("./lib/escapeHTML"));
 function toString(str) {
     if (typeof str === 'string')
         return str;
@@ -29,6 +31,7 @@ class App extends router_1.default {
         });
     }
     listen(port, callback) {
+        this.__active__();
         let PORT = this.#server.address()?.port;
         this.#server.port = () => PORT;
         this.#server.listen(port, () => callback(PORT));
@@ -50,7 +53,7 @@ function app() {
             response.end(JSON.stringify(data));
         };
         response.status = (code) => {
-            response.statusCode = code;
+            response.statusCode = +code;
             return response;
         };
         const url = request._path || request.path;
@@ -59,7 +62,44 @@ function app() {
             .filter(([key, bool]) => bool);
         const useUrl = (useUrls[0] || [''])[0] || '*';
         request.static = request.path.replace(useUrl, '');
-        console.log(request.static);
+        response.location = function location(url) {
+            return response.setHeader('Location', url);
+        };
+        response.format = function format(obj) {
+            const type = request.headers['accept'] || 'text/html';
+            const fn = obj[type] || obj['default'];
+            if (fn)
+                fn();
+            else
+                response.status(406).send('Not Acceptable');
+            return response;
+        };
+        response.redirect = function redirect(url) {
+            let address = url;
+            let body = '';
+            let status = 302;
+            address = response.location(address).getHeader('Location');
+            response.format({
+                text: function () {
+                    body = statuses_1.default.message[status] + '. Redirecting to ' + address;
+                },
+                html: function () {
+                    var u = (0, escapeHTML_1.default)(address);
+                    body = '<p>' + statuses_1.default.message[status] + '. Redirecting to <a href="' + u + '">' + u + '</a></p>';
+                },
+                default: function () {
+                    body = '';
+                }
+            });
+            response.status(status).setHeader('Content-Length', Buffer.byteLength(body));
+            if (request.method === 'HEAD') {
+                response.end();
+            }
+            else {
+                response.end(body);
+            }
+            return response;
+        };
         const valid = [
             ...METHODS.USE['*'],
             ...METHODS.USE[useUrl],
@@ -101,7 +141,6 @@ app.json =
 app.static =
     (path) => (req, res, next) => {
         const route = `${path}/${req.static}`;
-        console.log(route);
         if (fs_2.default.isFile(route))
             res.send(fs_1.default.readFileSync(route, 'utf-8'));
         else if (fs_2.default.isDirectory(route) && fs_2.default.isFile(`${route}/index.html`))

@@ -3,6 +3,8 @@ const waga = require('./dist')
 const app = waga()
 const router = waga.Router()
 
+app.use('router',router)
+
 router.get('*', (req, res) => {
   res.status(404).send('Not found')
 })
@@ -20,9 +22,12 @@ router.get('/:types/World', test)
 
 app.use(waga.static('./public'))
 app.use(waga.json())
-app.use(router)
-console.log(app.METHODS)
+router.get('/test', (req, res) => {
+  res.redirect('https://agacraft.ga/src/img/fondo.png')
+})
 
 app.listen(3000, () => {
   console.log('Server is listening on port 3000')
 })
+
+console.log(app.METHODS)

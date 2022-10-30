@@ -1,6 +1,13 @@
 import * as types from '../types';
 declare class Router {
     #private;
+    __active__(): {
+        GET: types.AgaHandler;
+        POST: types.AgaHandler;
+        PUT: types.AgaHandler;
+        DELETE: types.AgaHandler;
+        USE: types.AgaHandler;
+    };
     get METHODS(): {
         GET: types.AgaHandler;
         POST: types.AgaHandler;
