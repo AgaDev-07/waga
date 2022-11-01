@@ -52,6 +52,12 @@ function app() {
             response.setHeader('Content-Type', 'application/json');
             response.end(JSON.stringify(data));
         };
+        response.sendFile = (path) => {
+            if (fs_2.default.isFile(path))
+                response.end(fs_1.default.readFileSync(path, 'utf-8'));
+            else
+                METHODS.GET['*'][0](request, response, next);
+        };
         response.status = (code) => {
             response.statusCode = +code;
             return response;

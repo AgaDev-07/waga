@@ -14,6 +14,7 @@ export interface AgaRequest extends http.IncomingMessage {
     static: string;
 }
 export interface AgaResponse extends http.ServerResponse<http.IncomingMessage> {
+    sendFile(path: string): void;
     send(data: string): void;
     json(data: object): void;
     status(code: number | string): AgaResponse;
