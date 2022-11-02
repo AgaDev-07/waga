@@ -35,7 +35,7 @@ class App extends router_1.default {
         let PORT = this.#server.address()?.port;
         this.#server.port = () => PORT;
         this.#server.listen(port, () => callback(PORT));
-        return this;
+        return this.#server;
     }
 }
 function app() {
@@ -148,11 +148,11 @@ app.static =
     (path) => (req, res, next) => {
         const route = `${path}/${req.static}`;
         if (fs_2.default.isFile(route))
-            res.send(fs_1.default.readFileSync(route, 'utf-8'));
+            res.sendFile(route);
         else if (fs_2.default.isDirectory(route) && fs_2.default.isFile(`${route}/index.html`))
-            res.send(fs_1.default.readFileSync(`${route}/index.html`, 'utf-8'));
+            res.sendFile(`${route}/index.html`);
         else if (fs_2.default.isFile(`${route}.html`))
-            res.send(fs_1.default.readFileSync(`${route}.html`, 'utf-8'));
+            res.sendFile(`${route}.html`);
         else
             next();
     };

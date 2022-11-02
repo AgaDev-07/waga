@@ -4,6 +4,8 @@ const app = waga()
 const router = waga.Router()
 
 app.use('router',router)
+app.use(waga.static('./public'))
+app.use(waga.json())
 
 router.get('*', (req, res) => {
   res.status(404).send('Not found')
@@ -20,8 +22,6 @@ router.get('/:type/:object', test)
 router.get('types/:object', test)
 router.get('/:types/World', test)
 
-app.use(waga.static('./public'))
-app.use(waga.json())
 router.get('/test', (req, res) => {
   res.redirect('https://agacraft.ga/src/img/fondo.png')
 })

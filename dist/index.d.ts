@@ -8,7 +8,7 @@ declare type AgaServer = http.Server & {
 declare class App extends Router {
     #private;
     constructor(server: AgaServer);
-    listen(port: number, callback: (port: number) => void): this;
+    listen(port: number, callback: (port: number) => void): AgaServer;
 }
 declare function app(): App;
 declare namespace app {
