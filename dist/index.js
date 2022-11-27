@@ -11,6 +11,7 @@ const cors_1 = __importDefault(require("./lib/cors"));
 const router_1 = __importDefault(require("./lib/router"));
 const statuses_1 = __importDefault(require("./lib/statuses"));
 const escapeHTML_1 = __importDefault(require("./lib/escapeHTML"));
+const webSocket_1 = __importDefault(require("./lib/webSocket"));
 function toString(str) {
     if (typeof str === 'string')
         return str;
@@ -32,9 +33,8 @@ class App extends router_1.default {
     }
     listen(port, callback) {
         this.__active__();
-        let PORT = this.#server.address()?.port;
-        this.#server.port = () => PORT;
-        this.#server.listen(port, () => callback(PORT));
+        this.#server.port = () => this.#server.address()?.port;
+        this.#server.listen(port, () => callback(this.#server.port()));
         return this.#server;
     }
 }
@@ -158,4 +158,5 @@ app.static =
     };
 app.cors = cors_1.default;
 app.Router = () => new router_1.default();
+app.WebSocket = (server) => new webSocket_1.default(server);
 module.exports = app;
