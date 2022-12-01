@@ -11,7 +11,7 @@ declare class App extends Router {
     constructor(server: AgaServer);
     listen(port: number, callback: (port: number) => void): AgaServer;
 }
-declare function app(): App;
+declare function app(options?: any): App;
 declare namespace app {
     export var json: () => (req: types.AgaRequest, res: types.AgaResponse, next: types.AgaNext) => void;
     var _a: (path: string) => (req: types.AgaRequest, res: types.AgaResponse, next: types.AgaNext) => void;

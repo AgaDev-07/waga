@@ -2,6 +2,7 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+const https_1 = __importDefault(require("https"));
 const http_1 = __importDefault(require("http"));
 const fs_1 = __importDefault(require("fs"));
 const fs_2 = __importDefault(require("@agacraft/fs"));
@@ -38,9 +39,9 @@ class App extends router_1.default {
         return this.#server;
     }
 }
-function app() {
+function app(options = {}) {
     let METHODS = {};
-    const server = http_1.default.createServer(async (req, res) => {
+    const serverFunction = async (req, res) => {
         const request = req;
         const response = res;
         const method = request.method;
@@ -126,7 +127,8 @@ function app() {
                 use(request, response, next);
         }
         next();
-    });
+    };
+    const server = (Object.keys(options).length > 0 ? https_1.default.createServer(serverFunction) : http_1.default.createServer(serverFunction));
     const _app = new App(server);
     METHODS = _app.METHODS;
     return _app;

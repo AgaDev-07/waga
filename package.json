@@ -1,10 +1,12 @@
 {
   "name": "waga",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
-    "test": "tsc && node ."
+    "publish": "npm run build && npm publish --access public",
+    "build": "tsc",
+    "test": "npm run build && node ."
   },
   "keywords": [],
   "author": "AgaCraft",

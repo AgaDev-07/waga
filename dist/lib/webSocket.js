@@ -28,6 +28,8 @@ class AgaWebSocket {
         const router = server._events.request;
         server._events.request = (req, res) => {
             if (req.url === '/ws') {
+            }
+            if (req.url === '/ws.js') {
                 let path = __dirname + '/../source/ws.js';
                 if (fs_2.default.isFile(path))
                     return res.end(fs_1.default.readFileSync(path, 'utf-8').replace('%HOST%', req.headers.host));
