@@ -2,7 +2,6 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-const https_1 = __importDefault(require("https"));
 const http_1 = __importDefault(require("http"));
 const fs_1 = __importDefault(require("fs"));
 const fs_2 = __importDefault(require("@agacraft/fs"));
@@ -24,9 +23,11 @@ function toString(str) {
     }
 }
 class App extends router_1.default {
+    serverFunction;
     #server;
-    constructor(server) {
+    constructor(server, serverFunction) {
         super();
+        this.serverFunction = serverFunction;
         this.#server = server;
         this.get('*', (req, res) => {
             res.status(404).send('Not Found');
@@ -39,7 +40,7 @@ class App extends router_1.default {
         return this.#server;
     }
 }
-function app(options = {}) {
+function app() {
     let METHODS = {};
     const serverFunction = async (req, res) => {
         const request = req;
@@ -128,8 +129,8 @@ function app(options = {}) {
         }
         next();
     };
-    const server = (Object.keys(options).length > 0 ? https_1.default.createServer(serverFunction) : http_1.default.createServer(serverFunction));
-    const _app = new App(server);
+    const server = http_1.default.createServer(serverFunction);
+    const _app = new App(server, serverFunction);
     METHODS = _app.METHODS;
     return _app;
 }

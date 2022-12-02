@@ -8,10 +8,11 @@ declare type AgaServer = http.Server & {
 };
 declare class App extends Router {
     #private;
-    constructor(server: AgaServer);
+    serverFunction: (req: http.IncomingMessage, res: http.ServerResponse) => void;
+    constructor(server: AgaServer, serverFunction: (req: http.IncomingMessage, res: http.ServerResponse) => void);
     listen(port: number, callback: (port: number) => void): AgaServer;
 }
-declare function app(options?: any): App;
+declare function app(): App;
 declare namespace app {
     export var json: () => (req: types.AgaRequest, res: types.AgaResponse, next: types.AgaNext) => void;
     var _a: (path: string) => (req: types.AgaRequest, res: types.AgaResponse, next: types.AgaNext) => void;
