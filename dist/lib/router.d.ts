@@ -1,24 +1,14 @@
-import * as types from '../types';
+import { AgaHandler, AgaHandlerCallback, ValidMethods } from '../types';
+type methodRouter = Router | AgaHandlerCallback;
 declare class Router {
     #private;
-    __active__(): {
-        GET: types.AgaHandler;
-        POST: types.AgaHandler;
-        PUT: types.AgaHandler;
-        DELETE: types.AgaHandler;
-        USE: types.AgaHandler;
-    };
-    get METHODS(): {
-        GET: types.AgaHandler;
-        POST: types.AgaHandler;
-        PUT: types.AgaHandler;
-        DELETE: types.AgaHandler;
-        USE: types.AgaHandler;
-    };
-    get(path: string, ...callback: types.AgaHandlerCallback[]): this;
-    put(path: string, ...callback: types.AgaHandlerCallback[]): this;
-    post(path: string, ...callback: types.AgaHandlerCallback[]): this;
-    delete(path: string, ...callback: types.AgaHandlerCallback[]): this;
-    use(path: string | types.AgaHandlerCallback | Router, ...callback: types.AgaHandlerCallback[] | Router[]): this;
+    get METHODS(): Record<ValidMethods, AgaHandler>;
+    __active__(): Record<ValidMethods, AgaHandler>;
+    get(path: string, handler: AgaHandlerCallback): this;
+    post(path: string, handler: AgaHandlerCallback): this;
+    put(path: string, handler: AgaHandlerCallback): this;
+    delete(path: string, handler: AgaHandlerCallback): this;
+    use(handler: methodRouter, ...handlers: methodRouter[]): this;
+    use(path: string, ...handlers: methodRouter[]): this;
 }
 export = Router;

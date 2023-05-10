@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 function queryToObject(query) {
     return Object.fromEntries(query.split('&').map(r => r.split('=')));
 }
@@ -48,4 +47,4 @@ function betterURL(req, paths) {
     req._path = clearPath(_path.join('/'));
 }
 betterURL.clearPath = clearPath;
-exports.default = betterURL;
+module.exports = betterURL;

@@ -1,2 +1,3 @@
-import * as types from '../types';
-export default function bodyParser(req: types.AgaRequest, res: types.AgaResponse): Promise<string>;
+import { AgaRequest, AgaResponse } from "../types";
+declare const _default: (req: AgaRequest, res: AgaResponse) => Promise<string>;
+export = _default;

@@ -1,6 +1,5 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-function bodyParser(req, res) {
+module.exports = function bodyParser(req, res) {
     return new Promise((resolve, reject) => {
         let body = '';
         req.on('data', chunk => {
@@ -10,5 +9,4 @@ function bodyParser(req, res) {
             resolve(body);
         });
     });
-}
-exports.default = bodyParser;
+};
