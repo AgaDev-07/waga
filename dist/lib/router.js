@@ -12,7 +12,7 @@ class Router {
     get METHODS() {
         return this.#METHODS;
     }
-    #setMethod(method, path, handlerCallback) {
+    #setMethod(method, path, handlerCallback = []) {
         this.#METHODS[method][path] ||= [];
         this.#METHODS[method][path].push(...handlerCallback);
     }
@@ -28,7 +28,7 @@ class Router {
                     Object.keys(routerHandlers).forEach(routerPath => {
                         if (!routerMethods[method][routerPath][0])
                             return;
-                        const finalPath = (0, betterURL_1.clearPath)(`${path}/${routerPath}`);
+                        const finalPath = (0, betterURL_1.clearPath)(`${path}/${routerPath === '*' ? '' : routerPath}`);
                         this.#setMethod(method, finalPath, routerHandlers[routerPath]);
                     });
                 }
