@@ -20,6 +20,7 @@ function toString(data) {
         return JSON.stringify(data);
     return `${data}`;
 }
+const FN = () => { };
 class App extends router_1.default {
     constructor() {
         super();
@@ -27,13 +28,14 @@ class App extends router_1.default {
             res.status(404).send('404 Not Found');
         });
     }
-    listen(port, callback) {
-        this.__active__();
+    listen(port, callback = FN) {
         const fn = this.toFunction();
         const server = http_1.default.createServer(fn);
-        server.listen(port, callback);
+        server.listen(port, () => callback(server.address().port));
+        return server;
     }
     toFunction() {
+        this.__active__();
         return async (req, res) => {
             const request = req;
             const response = res;

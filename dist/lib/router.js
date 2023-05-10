@@ -42,17 +42,21 @@ class Router {
         handlerCallback.push(handler);
         return this;
     }
-    get(path, handler) {
-        return this.#registerHandler('GET', path, handler);
+    get(path, ...handlers) {
+        handlers.forEach(handler => this.#registerHandler('GET', path, handler));
+        return this;
     }
-    post(path, handler) {
-        return this.#registerHandler('POST', path, handler);
+    post(path, ...handlers) {
+        handlers.forEach(handler => this.#registerHandler('POST', path, handler));
+        return this;
     }
-    put(path, handler) {
-        return this.#registerHandler('PUT', path, handler);
+    put(path, ...handlers) {
+        handlers.forEach(handler => this.#registerHandler('PUT', path, handler));
+        return this;
     }
-    delete(path, handler) {
-        return this.#registerHandler('DELETE', path, handler);
+    delete(path, ...handlers) {
+        handlers.forEach(handler => this.#registerHandler('DELETE', path, handler));
+        return this;
     }
     use(path, ...handlers) {
         if (typeof path === 'function' || typeof path === 'object') {

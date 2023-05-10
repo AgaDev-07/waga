@@ -1,8 +1,10 @@
+/// <reference types="node" />
+import http from 'http';
 import Router from './lib/router';
 import { AgaRequest, AgaResponse } from './types';
 declare class App extends Router {
     constructor();
-    listen(port: number, callback?: () => void): void;
+    listen(port: number, callback?: (port?: number) => void): http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
     toFunction(): (req: AgaRequest, res: AgaResponse) => Promise<void>;
 }
 declare function app(): App;
