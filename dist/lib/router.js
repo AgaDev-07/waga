@@ -13,6 +13,7 @@ class Router {
         return this.#METHODS;
     }
     #setMethod(method, path, handlerCallback = []) {
+        path = (0, betterURL_1.clearPath)(path);
         this.#METHODS[method][path] ||= [];
         this.#METHODS[method][path].unshift(...handlerCallback);
     }
@@ -32,8 +33,7 @@ class Router {
         return this.#METHODS;
     }
     #registerHandler(method, path, handler) {
-        const handlerCallback = (this.#METHODS[method][path] ||= []);
-        handlerCallback.unshift(handler);
+        this.#setMethod(method, path, [handler]);
         return this;
     }
     get(path, ...handlers) {
