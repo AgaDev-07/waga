@@ -9,8 +9,9 @@ declare class App extends Router {
 }
 declare function app(): App;
 declare namespace app {
-    export var json: () => (req: any, res: any, next: any) => void;
-    var _a: (path: any) => (req: any, res: any, next: any) => void;
+    export var redirect: (url: string) => (request: AgaRequest, response: AgaResponse, next: import("./types").AgaNext) => AgaResponse;
+    export var json: (req: AgaRequest, res: AgaResponse, next: import("./types").AgaNext) => void;
+    var _a: (path: string) => (req: AgaRequest, res: AgaResponse, next: import("./types").AgaNext) => void;
     export var cors: (options?: {
         origin?: (origin: string, callback?: (err: Error, allow?: boolean) => void) => boolean;
         methods?: string;

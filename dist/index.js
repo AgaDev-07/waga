@@ -7,10 +7,11 @@ const fs_1 = __importDefault(require("fs"));
 const fs_2 = __importDefault(require("@agacraft/fs"));
 const router_1 = __importDefault(require("./lib/router"));
 const betterURL_1 = __importDefault(require("./lib/betterURL"));
-const statuses_1 = __importDefault(require("./lib/statuses"));
 const bodyParser_1 = __importDefault(require("./lib/bodyParser"));
-const escapeHTML_1 = __importDefault(require("./lib/escapeHTML"));
-const cors_1 = __importDefault(require("./lib/cors"));
+const cors_1 = __importDefault(require("./prop/cors"));
+const static_1 = __importDefault(require("./prop/static"));
+const json_1 = __importDefault(require("./prop/json"));
+const redirect_1 = __importDefault(require("./prop/redirect"));
 function toString(data) {
     if (typeof data === 'string')
         return data;
@@ -50,7 +51,7 @@ class App extends router_1.default {
             };
             response.sendFile = path => {
                 if (fs_2.default.isFile(path))
-                    response.end(fs_1.default.readFileSync(path, 'utf-8'));
+                    response.end(fs_1.default.readFileSync(path));
                 else
                     this.METHODS.GET['*'][0](request, response, next);
             };
@@ -76,32 +77,7 @@ class App extends router_1.default {
                     response.status(406).send('Not Acceptable');
                 return response;
             };
-            response.redirect = function redirect(url) {
-                let address = url;
-                let body = '';
-                let status = 302;
-                address = response.location(address).getHeader('Location');
-                response.format({
-                    text: function () {
-                        body = statuses_1.default.message[status] + '. Redirecting to ' + address;
-                    },
-                    html: function () {
-                        var u = (0, escapeHTML_1.default)(address);
-                        body = '<p>' + statuses_1.default.message[status] + '. Redirecting to <a href="' + u + '">' + u + '</a></p>';
-                    },
-                    default: function () {
-                        body = '';
-                    },
-                });
-                response.status(status).setHeader('Content-Length', Buffer.byteLength(body));
-                if (request.method === 'HEAD') {
-                    response.end();
-                }
-                else {
-                    response.end(body);
-                }
-                return response;
-            };
+            response.redirect = (url) => (0, redirect_1.default)(url)(request, response, next);
             const valid = [
                 ...this.METHODS.USE['*'],
                 ...this.METHODS.USE[useUrl],
@@ -128,31 +104,9 @@ class App extends router_1.default {
 function app() {
     return new App();
 }
-function toJson(str) {
-    try {
-        return JSON.parse(str);
-    }
-    catch (error) {
-        return {};
-    }
-}
-app.json =
-    () => (req, res, next) => {
-        req.body = toJson(req.body);
-        next();
-    };
-app.static =
-    (path) => (req, res, next) => {
-        const route = `${path}/${req.static}`;
-        if (fs_2.default.isFile(route))
-            res.sendFile(route);
-        else if (fs_2.default.isDirectory(route) && fs_2.default.isFile(`${route}/index.html`))
-            res.sendFile(`${route}/index.html`);
-        else if (fs_2.default.isFile(`${route}.html`))
-            res.sendFile(`${route}.html`);
-        else
-            next();
-    };
+app.redirect = redirect_1.default;
+app.json = json_1.default;
+app.static = static_1.default;
 app.cors = cors_1.default;
 app.Router = () => new router_1.default();
 module.exports = app;
