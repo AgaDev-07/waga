@@ -14,7 +14,7 @@ class Router {
     }
     #setMethod(method, path, handlerCallback = []) {
         this.#METHODS[method][path] ||= [];
-        this.#METHODS[method][path].push(...handlerCallback);
+        this.#METHODS[method][path].unshift(...handlerCallback);
     }
     __active__() {
         this.#routers.forEach(([path, router]) => {
@@ -33,7 +33,7 @@ class Router {
     }
     #registerHandler(method, path, handler) {
         const handlerCallback = (this.#METHODS[method][path] ||= []);
-        handlerCallback.push(handler);
+        handlerCallback.unshift(handler);
         return this;
     }
     get(path, ...handlers) {
@@ -61,7 +61,7 @@ class Router {
             if (typeof handler === 'function')
                 this.#registerHandler('USE', path, handler);
             else if (handler instanceof Router)
-                this.#routers.push([path, handler]);
+                this.#routers.unshift([path, handler]);
             else
                 throw new TypeError(`Invalid handler: ${handler}`);
         });
