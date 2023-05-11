@@ -17,24 +17,18 @@ class Router {
         this.#METHODS[method][path].push(...handlerCallback);
     }
     __active__() {
-        const METHODS = this.METHODS;
         this.#routers.forEach(([path, router]) => {
             const routerMethods = router.__active__();
             Object.keys(routerMethods).forEach((method) => {
-                if (path === '*')
-                    this.#setMethod(method, path, routerMethods[method][path]);
-                else {
-                    const routerHandlers = routerMethods[method];
-                    Object.keys(routerHandlers).forEach(routerPath => {
-                        if (!routerMethods[method][routerPath][0])
-                            return;
-                        const finalPath = (0, betterURL_1.clearPath)(`${path}/${routerPath === '*' ? '' : routerPath}`);
-                        this.#setMethod(method, finalPath, routerHandlers[routerPath]);
-                    });
-                }
+                const routerHandlers = routerMethods[method];
+                Object.keys(routerHandlers).forEach(routerPath => {
+                    if (!routerMethods[method][routerPath][0])
+                        return;
+                    const finalPath = (0, betterURL_1.clearPath)(`${path}/${routerPath === '*' ? '' : routerPath}`);
+                    this.#setMethod(method, finalPath, routerHandlers[finalPath]);
+                });
             });
         });
-        this.#METHODS = METHODS;
         return this.#METHODS;
     }
     #registerHandler(method, path, handler) {
