@@ -24,7 +24,7 @@ class Router {
                 Object.keys(routerHandlers).forEach(routerPath => {
                     if (!routerMethods[method][routerPath][0])
                         return;
-                    const finalPath = (0, betterURL_1.clearPath)(`${path}/${routerPath === '*' ? '' : routerPath}`);
+                    const finalPath = (0, betterURL_1.clearPath)(`${path === '*' ? '' : path}/${routerPath === '*' ? '' : routerPath}`);
                     this.#setMethod(method, finalPath, routerHandlers[finalPath]);
                 });
             });
