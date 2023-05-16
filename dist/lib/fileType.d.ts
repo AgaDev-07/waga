@@ -1,0 +1,1 @@
+export default function (fileU: string): "text/html" | "text/css" | "application/javascript" | "application/json" | "image/png" | "image/jpg" | "image/jpeg" | "image/gif" | "image/svg+xml" | "image/x-icon" | "audio/mpeg" | "video/mp4" | "video/webm" | "audio/ogg" | "application/zip" | "application/pdf" | "text/plain" | "image/webp" | "font/otf" | "application/gzip";

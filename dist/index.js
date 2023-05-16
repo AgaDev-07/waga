@@ -12,6 +12,7 @@ const cors_1 = __importDefault(require("./prop/cors"));
 const static_1 = __importDefault(require("./prop/static"));
 const json_1 = __importDefault(require("./prop/json"));
 const redirect_1 = __importDefault(require("./prop/redirect"));
+const fileType_1 = __importDefault(require("./lib/fileType"));
 function toString(data) {
     if (typeof data === 'string')
         return data;
@@ -28,6 +29,16 @@ class App extends router_1.default {
         this.get('*', (req, res) => {
             res.status(404).send('404 Not Found');
         });
+    }
+    #TypeFiles = {};
+    #getTypeFile(path) {
+        const ext = path.split('.').pop()?.toLowerCase();
+        return this.#TypeFiles[ext] || (0, fileType_1.default)(path);
+    }
+    ;
+    setTypeFile(ext, type) {
+        this.#TypeFiles[ext] = type;
+        return this;
     }
     listen(port, callback = FN) {
         const fn = this.toFunction();
@@ -50,10 +61,13 @@ class App extends router_1.default {
                 response.end(JSON.stringify(data));
             };
             response.sendFile = path => {
-                if (fs_2.default.isFile(path))
+                if (fs_2.default.isFile(path)) {
+                    const type = this.#getTypeFile(path);
+                    response.setHeader('Content-Type', type);
                     response.end(fs_1.default.readFileSync(path));
+                }
                 else
-                    this.METHODS.GET['*'][0](request, response, next);
+                    next();
             };
             response.status = code => {
                 response.statusCode = +code;

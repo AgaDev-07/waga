@@ -3,7 +3,9 @@ import http from 'http';
 import Router from './lib/router';
 import { AgaRequest, AgaResponse } from './types';
 declare class App extends Router {
+    #private;
     constructor();
+    setTypeFile(ext: string, type: string): this;
     listen(port: number, callback?: (port?: number) => void): http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
     toFunction(): (req: AgaRequest, res: AgaResponse) => Promise<void>;
 }
