@@ -1,20 +1,19 @@
 {
   "name": "waga",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
     "publish": "npm run build && npm publish --access public",
-    "build": "tsc",
-    "test": "npm run build && node ."
+    "build": "tsc"
   },
   "keywords": [],
   "author": "AgaCraft",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^18.11.0",
-    "typescript": "^4.8.4",
-    "runaga": "^1.2.0"
+    "runaga": "^1.2.0",
+    "typescript": "^4.8.4"
   },
   "dependencies": {
     "@agacraft/fs": "1.0.1"

@@ -1,7 +1,4 @@
 node_modules
-public
-socket
-src
 package-lock.json
-runaga.json
-tsconfig.json
+test
+.gitignore

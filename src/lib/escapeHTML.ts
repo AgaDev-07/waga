@@ -1,6 +1,5 @@
-"use strict";
 const matchHtmlRegExp = /["'&<>]/;
-module.exports = function escapeHtml(string) {
+export = function escapeHtml(string: string) {
     const str = '' + string;
     const match = matchHtmlRegExp.exec(str);
     if (!match) {
