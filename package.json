@@ -1,6 +1,6 @@
 {
   "name": "waga",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
@@ -11,9 +11,8 @@
   "author": "AgaCraft",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^18.11.0",
-    "runaga": "^1.2.0",
-    "typescript": "^4.8.4"
+    "@types/node": "18.11.0",
+    "typescript": "4.8.4"
   },
   "dependencies": {
     "@agacraft/fs": "1.0.1"
