@@ -7,7 +7,7 @@ export function isIterable<T>(obj: any): obj is Iterable<T> {
   return typeof obj[Symbol.iterator] === 'function';
 }
 
-export function isIterableWith<T>(obj: Iterable<T>, fn: (item: any) => item is T) {
+export function isIterableWith<T>(obj: Iterable<T>, fn: (item: any) => item is T): obj is Iterable<T> {
   if(!isIterable(obj)) throw new TypeError(`"obj" must be iterable`);
   for(let item of obj) {
     if(!fn(item)) return false;

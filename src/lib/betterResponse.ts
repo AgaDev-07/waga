@@ -1,10 +1,11 @@
 import fs from 'fs'
 import { isFile } from '@agacraft/fs';
 import { WagaNext, WagaRequest, WagaResponse } from '../types';
-import { redirect } from '..';
+import redirect from '../prop/redirect';
 import fileType from '../utils/fileType';
+import App from '../App';
 
-export = function betterResponse(request: WagaRequest, response: WagaResponse, next: WagaNext) {
+export default function betterResponse(this:App, request: WagaRequest, response: WagaResponse, next: WagaNext) {
 	response.contentType = (type: string) => response.setHeader('Content-Type', type);
 	response.type = (type: string) => response.contentType(fileType(type));
 	response.send = data => {
@@ -12,14 +13,12 @@ export = function betterResponse(request: WagaRequest, response: WagaResponse, n
 		response.json(data);
 	};
 	response.json = data => {
-		response.setHeader('Content-Type', 'application/json');
-		response.end(JSON.stringify(data));
+		response.type('json').end(JSON.stringify(data));
 	};
 	response.sendFile = path => {
 		if (isFile(path)) {
 			const type = this.getTypeFile(path);
-			response.setHeader('Content-Type', type);
-			response.end(fs.readFileSync(path));
+			response.contentType(type).end(fs.readFileSync(path));
 		} else next();
 	};
 	response.status = code => {

@@ -1,3 +1,4 @@
+import App from '../App';
 import { WagaRequest, Query, QueryValue, WagaResponse, WagaNext } from '../types';
 import { extToContentType } from '../utils/fileType';
 
@@ -31,7 +32,7 @@ function isContentType(type: string) {
 	return !!type.match(/^(.*)\/(.*)$/);
 }
 
-function betterRequest(req: WagaRequest, res: WagaResponse, next: WagaNext) {
+function betterRequest(this:App, req: WagaRequest, res: WagaResponse, next: WagaNext) {
 	const { url = '/' } = req;
 	const [path, query = ''] = url.split('?');
 	req.query = queryToObject(query);

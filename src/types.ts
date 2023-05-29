@@ -10,7 +10,6 @@ export interface WagaRequest extends http.IncomingMessage {
 	body: string;
 	query: Query;
 	params: Record<string, string>;
-	static: string
 }
 export interface WagaResponse extends http.ServerResponse<http.IncomingMessage> {
 	contentType: (type: string) => WagaResponse;
@@ -28,7 +27,6 @@ export type WagaNext = () => void;
 export type ValidMethods = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'USE';
 export type WagaHandlerCallback = (req: WagaRequest, res: WagaResponse, next: WagaNext) => void;
 export interface WagaHandler {
-	static?: string;
 	path: string;
 	validate: ValidatePathFn;
 	value: WagaHandlerCallback[];
@@ -40,5 +38,4 @@ export interface WagaValidMethod {
 	fns: WagaHandler['value'];
 	length: WagaHandler['length'];
 	paramsKeys: number;
-	static?: string;
 }

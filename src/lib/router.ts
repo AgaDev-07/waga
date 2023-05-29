@@ -40,7 +40,6 @@ class Router {
 								validate: validatePath(_path),
 								value: routerHandler.value,
 								length: _path.split('/').length,
-								static: routerHandler.static || routerHandler.path,
 							});
 						else handler.value.unshift(...routerHandler.value);
 					}
